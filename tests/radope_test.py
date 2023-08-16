@@ -57,10 +57,11 @@ def _run_performance_test(samples, epsilon):
 
 def _gen_samples(n):
     seed(12345)
-    return [(x, uniform(0.0, 1.0)) for x in range(10000)]
+    return [(x, uniform(0.0, 1.0)) for x in range(n)]
 
 
 def test_performance():
     for n in (1000, 10000, 100000):
+        samples = _gen_samples(n)
         for epsilon in (0.1, 0.25, 0.5, 1.0):
-            _run_performance_test(_gen_samples(n), epsilon)
+            _run_performance_test(samples, epsilon)
