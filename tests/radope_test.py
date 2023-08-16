@@ -1,5 +1,8 @@
+import itertools
 from random import seed, uniform
 from timeit import repeat
+
+import pytest
 
 from radope import (
     calc_slopes,
@@ -60,8 +63,25 @@ def _gen_samples(n):
     return [(x, uniform(0.0, 1.0)) for x in range(n)]
 
 
-def test_performance():
+@pytest.mark.performance
+def test_performance_uniform_random():
     for n in (1000, 10000, 100000):
         samples = _gen_samples(n)
+        for epsilon in (0.1, 0.25, 0.5, 1.0):
+            _run_performance_test(samples, epsilon)
+
+
+@pytest.mark.performance
+def test_performance_delta_random():
+    for n in (1000, 10000, 100000, 1000000):
+        samples = _gen_samples(n)
+        # this attempts to simulate some wave-like data with less variation between pairs of samples
+        samples = list(
+            itertools.accumulate(
+                samples,
+                lambda a, b: (b[0], a[1] + (b[1] - 0.5) * 0.5),
+                initial=(-1, 0),
+            )
+        )[1:]
         for epsilon in (0.1, 0.25, 0.5, 1.0):
             _run_performance_test(samples, epsilon)

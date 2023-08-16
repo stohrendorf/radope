@@ -4,8 +4,11 @@ This package provides an iterative implementation of the Ramer-Douglas-Peucker a
 
 ### Performance
 
+#### Test scenario: uniformly random samples
+
 Using uniformly random data with values between 0 and 1 on the y axis, evenly spaced on the x axis.
 Times are averaged from 5 runs.
+
 Note that the speedup is dependent on the number of samples and epsilon.
 
 | Samples | Epsilon | Reduction | Reference time (s) | Iterative time (s) | Speedup |
@@ -14,11 +17,39 @@ Note that the speedup is dependent on the number of samples and epsilon.
 | 1000    | 0.25    | 0.591     | 0.026              | 0.004              | 7.0     |
 | 1000    | 0.5     | 0.316     | 0.024              | 0.002              | 10.2    |
 | 1000    | 1.0     | 0.002     | 0.001              | 0.002              | 0.3     |
-| 10000   | 0.1     | 0.8174    | 0.606              | 0.045              | 13.5    |
+| 10000   | 0.1     | 0.817     | 0.606              | 0.045              | 13.5    |
 | 10000   | 0.25    | 0.593     | 0.576              | 0.037              | 15.5    |
 | 10000   | 0.5     | 0.316     | 0.008              | 0.022              | 25.9    |
 | 10000   | 1.0     | 0.0002    | 0.021              | 0.022              | 0.4     |
-| 100000  | 0.1     | 0.8194    | 17.8               | 0.443              | 40.3    |
-| 100000  | 0.25    | 0.5955    | 17.5               | 0.367              | 47.9    |
+| 100000  | 0.1     | 0.819     | 17.8               | 0.443              | 40.3    |
+| 100000  | 0.25    | 0.596     | 17.5               | 0.367              | 47.9    |
 | 100000  | 0.5     | 0.318     | 17.2               | 0.211              | 81.5    |
 | 100000  | 1.0     | 0.00002   | 0.075              | 0.213              | 0.4     |
+
+#### Test scenario: random values with limited range between consecutive samples
+
+Using uniformly random data with a maximum difference of 0.25 between each sample pair on the y axis, evenly spaced on
+the x axis.
+Times are averaged from 5 runs.
+
+This should be a more realistic test scenario.
+Note that the speedup is mostly dependent on the number of samples only.
+
+| Samples | Epsilon | Reduction | Reference time (s) | Iterative time (s) | Speedup |
+|---------|---------|-----------|--------------------|--------------------|---------|
+| 1000    | 0.1     | 0.453     | 0.011              | 0.003              | 3.1     |
+| 1000    | 0.25    | 0.171     | 0.008              | 0.003              | 3.0     |
+| 1000    | 0.5     | 0.068     | 0.006              | 0.002              | 2.6     |
+| 1000    | 1.0     | 0.026     | 0.005              | 0.002              | 2.3     |
+| 10000   | 0.1     | 0.450     | 0.141              | 0.035              | 4.1     |
+| 10000   | 0.25    | 0.171     | 0.109              | 0.025              | 4.3     |
+| 10000   | 0.5     | 0.062     | 0.089              | 0.023              | 3.8     |
+| 10000   | 1.0     | 0.020     | 0.072              | 0.024              | 3.0     |
+| 100000  | 0.1     | 0.458     | 1.82               | 0.353              | 5.1     |
+| 100000  | 0.25    | 0.168     | 1.52               | 0.263              | 5.8     |
+| 100000  | 0.5     | 0.061     | 1.33               | 0.239              | 5.6     |
+| 100000  | 1.0     | 0.020     | 1.15               | 0.228              | 5.0     |
+| 1000000 | 0.1     | 0.459     | 21.9               | 3.605              | 6.1     |
+| 1000000 | 0.25    | 0.168     | 18.9               | 2.601              | 7.3     |
+| 1000000 | 0.5     | 0.061     | 16.8               | 2.343              | 7.2     |
+| 1000000 | 1.0     | 0.019     | 15.0               | 2.258              | 6.7     |
