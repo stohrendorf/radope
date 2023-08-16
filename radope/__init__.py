@@ -51,8 +51,8 @@ def simplify_iterative_functional(samples: Sequence[Sample], epsilon: float) -> 
         # init the funnel by calculating the funnel edges from the first 2 points
         slope_top, slope_bottom = calc_slopes((x0, y0), samples[p0 + 1], epsilon)
 
-        for next_p, sample in enumerate(samples[p0 + 2 :], p0 + 2):
-            current_slope_top, current_slope_bottom = calc_slopes((x0, y0), sample, epsilon)
+        for next_p in range(p0 + 2, len(samples)):
+            current_slope_top, current_slope_bottom = calc_slopes((x0, y0), samples[next_p], epsilon)
 
             # narrow the funnel down
             slope_top = min(slope_top, current_slope_top)
@@ -69,22 +69,21 @@ def simplify_iterative_functional(samples: Sequence[Sample], epsilon: float) -> 
     return r
 
 
-def simplify_recursive_reference(samples: Sequence[Sample], epsilon: float, i0: int) -> list[int]:
+def simplify_recursive_reference(samples: Sequence[Sample], epsilon: float, i0: int, i1: int) -> list[int]:
     """
     The original Ramen-Douglas-Peucker algorithm.
     """
     # Find the point with the maximum distance
     d_max = 0
     i_max = 0
-    end = len(samples)
 
     # calculate the reference line
-    x0, y0 = samples[0]
-    x1, y1 = samples[-1]
+    x0, y0 = samples[i0]
+    x1, y1 = samples[i1]
     dx = x1 - x0
     dy = y1 - y0
 
-    for i in range(1, end):
+    for i in range(i0, i1):
         x, y = samples[i]
         x -= x0
         expected = y0 + x * dy / dx
@@ -96,11 +95,11 @@ def simplify_recursive_reference(samples: Sequence[Sample], epsilon: float, i0: 
     # If max distance is greater than epsilon, recursively simplify
     if d_max > epsilon:
         # Recursive call
-        left = simplify_recursive_reference(samples[:i_max], epsilon, i0)[:-1]
-        right = simplify_recursive_reference(samples[i_max:], epsilon, i_max + i0)
+        left = simplify_recursive_reference(samples, epsilon, i0, i_max)[:-1]
+        right = simplify_recursive_reference(samples, epsilon, i_max, i1)
         return left + right
     else:
-        return [i0, i0 + end - 1]
+        return [i0, i1]
 
 
 def simplify_reference_functional(samples: Sequence[Sample], epsilon: float) -> list[int]:
@@ -110,7 +109,7 @@ def simplify_reference_functional(samples: Sequence[Sample], epsilon: float) -> 
     if len(samples) == 1:
         return [0]
 
-    elems = simplify_recursive_reference(samples, epsilon, 0)
+    elems = simplify_recursive_reference(samples, epsilon, 0, len(samples) - 1)
     if len(elems) > 1 and elems[-1] == elems[-2]:
         elems = elems[:-1]
     return elems
