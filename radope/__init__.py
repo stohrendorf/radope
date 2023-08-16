@@ -2,7 +2,7 @@
 An iterative implementation of the Ramer-Douglas-Peucker algorithm to select significant points of a sequence of points.
 """
 
-from typing import Iterable, Sequence
+from typing import Sequence
 
 Sample = tuple[float, float]
 

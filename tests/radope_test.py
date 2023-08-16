@@ -1,8 +1,11 @@
-import functools
-
-from radope import simplify_iterative_functional, simplify_reference_functional, calc_slopes
 from random import seed, uniform
 from timeit import repeat
+
+from radope import (
+    calc_slopes,
+    simplify_iterative_functional,
+    simplify_reference_functional,
+)
 
 
 def test_calc_slope():
