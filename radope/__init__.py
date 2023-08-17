@@ -16,7 +16,8 @@ def calc_slopes(sample1: Sample, sample2: Sample, epsilon: float) -> tuple[float
     :param epsilon: The epsilon value to be added and subtracted from the y value of `sample2`.
     :return: A tuple of the top and bottom slopes.
     """
-    assert epsilon >= 0
+    if epsilon < 0:
+        raise ValueError("Epsilon must be non-negative.")
 
     x0, y0 = sample1
     x1, y1 = sample2
@@ -43,7 +44,7 @@ def simplify_iterative_functional(samples: Sequence[Sample], epsilon: float) -> 
 
     r = []
     while p0 < len(samples) - 1:
-        # yield it, as we always have the most recent significant index in p0
+        # we always have the most recent significant index in p0
         r.append(p0)
 
         x0, y0 = samples[p0]
@@ -69,21 +70,26 @@ def simplify_iterative_functional(samples: Sequence[Sample], epsilon: float) -> 
     return r
 
 
-def simplify_recursive_reference(samples: Sequence[Sample], epsilon: float, i0: int, i1: int) -> list[int]:
+def simplify_recursive_reference(samples: Sequence[Sample], epsilon: float, i_start: int, i_end: int) -> list[int]:
     """
-    The original Ramen-Douglas-Peucker algorithm.
+    The Ramen-Douglas-Peucker algorithm, which simplifies a curve with regards to an epsilon.
+    :param samples: The `(x, y)` coordinates of the sample points.
+    :param epsilon: The maximum permitted error between the true curve and its simplification.
+    :param i_start: The array index of the first sample point.
+    :param i_end: The array index of the last sample point.
+    :return: List of indices in `samples` representing the simplified curve.
     """
     # Find the point with the maximum distance
     d_max = 0
     i_max = 0
 
     # calculate the reference line
-    x0, y0 = samples[i0]
-    x1, y1 = samples[i1]
+    x0, y0 = samples[i_start]
+    x1, y1 = samples[i_end]
     dx = x1 - x0
     dy = y1 - y0
 
-    for i in range(i0, i1):
+    for i in range(i_start, i_end):
         x, y = samples[i]
         x -= x0
         expected = y0 + x * dy / dx
@@ -95,11 +101,11 @@ def simplify_recursive_reference(samples: Sequence[Sample], epsilon: float, i0: 
     # If max distance is greater than epsilon, recursively simplify
     if d_max > epsilon:
         # Recursive call
-        left = simplify_recursive_reference(samples, epsilon, i0, i_max)[:-1]
-        right = simplify_recursive_reference(samples, epsilon, i_max, i1)
+        left = simplify_recursive_reference(samples, epsilon, i_start, i_max)[:-1]
+        right = simplify_recursive_reference(samples, epsilon, i_max, i_end)
         return left + right
     else:
-        return [i0, i1]
+        return [i_start, i_end]
 
 
 def simplify_reference_functional(samples: Sequence[Sample], epsilon: float) -> list[int]:
