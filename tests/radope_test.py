@@ -71,17 +71,26 @@ def test_performance_uniform_random():
             _run_performance_test(samples, epsilon)
 
 
-@pytest.mark.performance
-def test_performance_delta_random():
+def _test_delta_performance(delta: float):
     for n in (1000, 10000, 100000, 1000000):
         samples = _gen_samples(n)
         # this attempts to simulate some wave-like data with less variation between pairs of samples
         samples = list(
             itertools.accumulate(
                 samples,
-                lambda a, b: (b[0], a[1] + (b[1] - 0.5) * 0.5),
+                lambda a, b: (b[0], a[1] + (b[1] - 0.5) * (delta * 2)),
                 initial=(-1, 0),
             )
         )[1:]
         for epsilon in (0.1, 0.25, 0.5, 1.0):
             _run_performance_test(samples, epsilon)
+
+
+@pytest.mark.performance
+def test_performance_delta_random_0_25():
+    _test_delta_performance(0.25)
+
+
+@pytest.mark.performance
+def test_performance_delta_random_0_5():
+    _test_delta_performance(0.5)

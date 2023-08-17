@@ -28,12 +28,15 @@ Note that the speedup is dependent on the number of samples and epsilon.
 
 #### Test scenario: random values with limited range between consecutive samples
 
-Using uniformly random data with a maximum difference of 0.25 between each sample pair on the y axis, evenly spaced on
-the x axis.
+Using uniformly random data with a maximum difference of a given delta between each sample pair on the y axis, evenly
+spaced on the x axis.
 Times are averaged from 5 runs.
 
 This should be a more realistic test scenario.
-Note that the speedup is mostly dependent on the number of samples only.
+Note that the speedup is mostly dependent on the number of samples, and somewhat on the ration between variation and
+epsilon.
+
+##### Delta = 0.25
 
 | Samples | Epsilon | Reduction | Reference time (s) | Iterative time (s) | Speedup |
 |---------|---------|-----------|--------------------|--------------------|---------|
@@ -53,3 +56,24 @@ Note that the speedup is mostly dependent on the number of samples only.
 | 1000000 | 0.25    | 0.168     | 18.9               | 2.601              | 7.3     |
 | 1000000 | 0.5     | 0.061     | 16.8               | 2.343              | 7.2     |
 | 1000000 | 1.0     | 0.019     | 15.0               | 2.258              | 6.7     |
+
+##### Delta = 0.5
+
+| Samples | Epsilon | Reduction | Reference time (s) | Iterative time (s) | Speedup |
+|---------|---------|-----------|--------------------|--------------------|---------|
+| 1000    | 0.1     | 0.662     | 0.012              | 0.004              | 3.0     |
+| 1000    | 0.25    | 0.386     | 0.010              | 0.003              | 3.2     |
+| 1000    | 0.5     | 0.171     | 0.008              | 0.002              | 3.2     |
+| 1000    | 1.0     | 0.068     | 0.006              | 0.002              | 2.7     |
+| 10000   | 0.1     | 0.668     | 0.153              | 0.040              | 3.8     |
+| 10000   | 0.25    | 0.171     | 0.128              | 0.030              | 4.2     |
+| 10000   | 0.5     | 0.171     | 0.109              | 0.025              | 4.4     |
+| 10000   | 1.0     | 0.061     | 0.090              | 0.023              | 4.0     |
+| 100000  | 0.1     | 0.676     | 1.90               | 0.416              | 4.6     |
+| 100000  | 0.25    | 0.381     | 1.71               | 0.314              | 5.4     |
+| 100000  | 0.5     | 0.168     | 1.46               | 0.251              | 5.8     |
+| 100000  | 1.0     | 0.061     | 1.28               | 0.227              | 5.6     |
+| 1000000 | 0.1     | 0.676     | 22.8               | 4.22               | 5.4     |
+| 1000000 | 0.25    | 0.380     | 20.3               | 3.18               | 6.4     |
+| 1000000 | 0.5     | 0.166     | 18.1               | 2.50               | 7.3     |
+| 1000000 | 1.0     | 0.061     | 16.2               | 2.30               | 7.1     |
