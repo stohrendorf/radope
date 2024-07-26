@@ -2,6 +2,10 @@
 
 This package provides an iterative implementation of the Ramer-Douglas-Peucker algorithm.
 
+Please note that the implemented algorithm only works, given a metric $d$ for a series of samples $x_i$, if and only if $d(x_i, x_0) \leq d(x_{i+1}, x_0) + \delta$ with $\delta > 0$. For example, a series of points where $x_{i>0}$ forms a circle around $x_0$ (i.e., $d(x_0, x_a) = d(x_0, x_b) \forall a,b \neq 0$), this algorithm will only yield two samples. If $\delta$ is small enough, this algorithm will certainly omit samples which you would consider significant.
+
+I tried to describe (and eventually implement) an algorithm that covers the case where $d(x_0, x_i) \leq d(x_0, x_{i+1})$, however my math skills are inferior to describe it properly using linear algebra. The idea is that if $d(x_0, x_i) > d(x_0, x_{i+1})$, then $x_i$ must be a significant sample, and the funnel must start anew from $x_i$.
+
 ### Performance
 
 #### Test scenario: uniformly random samples
